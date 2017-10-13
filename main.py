@@ -38,11 +38,19 @@ def newpost():
     if request.method == "POST":
         body = request.form["body"]
         title = request.form["title"]
+        if len(title) == 0:
+            return render_template("newpost.html", error="Please fill in this body")
 
+        if len(body) == 0:
+            return render_template("newpost.html", error="Please fill in this body")
+        
+        
         new_post = Blog(title, body)
         db.session.add(new_post)
         db.session.commit()
         return redirect("/blog") 
+    
+
 
     return render_template("newpost.html" )
 
