@@ -51,6 +51,23 @@ def signup():
     return render_template("signup.html")
 
 
+@app.route("/login", methods=["POST", "GET"])
+def login():
+    if request.method == "POST":
+        username = request.form["username"]
+        password = request.form["password"]
+        user = User.query.filter_by(username=username).first()
+        if user and user.password == password:
+            session["username"] = username
+            flash("Logged in")
+            return redirect("/")
+        else:
+            flash("User Password incorrect or User does not exist", "error")
+    
+    return render_template("login.html")
+
+
+
 @app.route("/blog", methods=["POST", "GET"])
 def index():
 
