@@ -128,7 +128,10 @@ def post():
 def index():
 
     users = User.query.all()
+
     return render_template("home.html", title="Homepage", users = users)
+    # Definitely almost finished home page
+
 
 if __name__ == '__main__':
     app.run()
