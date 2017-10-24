@@ -95,8 +95,8 @@ def newpost():
     if request.method == "POST":
         body = request.form["body"]
         title = request.form["title"]
-        # Adding owner variable
-        owner = request.form["username"]
+        # Adding owner variable and not sure about how to query it...
+        owner = User.query.filter_by(username=session["username"]).first()
         if len(title) == 0:
             return render_template("newpost.html", error="Please fill in this body")
 
