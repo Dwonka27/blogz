@@ -1,4 +1,4 @@
-from flask import Flask, request, redirect, render_template, flash
+from flask import Flask, request, redirect, render_template, flash, session
 from flask_sqlalchemy import SQLAlchemy
 
 app = Flask(__name__)
@@ -6,6 +6,7 @@ app.config['DEBUG'] = True
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://blogz:blogz@localhost:8889/blogz'
 app.config['SQLALCHEMY_ECHO'] = True
 db = SQLAlchemy(app)
+app.secret_key = "sajsadiofewojwosdosdjio"
 
 
 class Blog(db.Model):
@@ -44,12 +45,14 @@ def signup():
             new_user = User(username, password)
             db.session.add(new_user)
             db.session.commit()
-            session["username"] = username     
+            session["username"] = username
+            return redirect("/newpost")     
+            #successfully rerouted to new post page!
         else:
             return "<h1>User Already Exist.</h1>"
-
+    #changed render from signup to home       
     return render_template("signup.html")
-
+    #successfully rerouted to new post page!
 
 @app.route("/login", methods=["POST", "GET"])
 def login():
@@ -60,16 +63,22 @@ def login():
         if user and user.password == password:
             session["username"] = username
             flash("Logged in")
-            return redirect("/")
+            #changed redirect to "/newpost" rather than "/"(index)
+            return redirect("/newpost")
         else:
             flash("User Password incorrect or User does not exist", "error")
     
     return render_template("login.html")
 
 
+@app.route("/logout")
+def logout():
+    del session["email"]
+    return redirect("/")
+
 
 @app.route("/blog", methods=["POST", "GET"])
-def index():
+def blog():
 
     if request.method == "POST":
         title = request.form["title"]
@@ -86,6 +95,8 @@ def newpost():
     if request.method == "POST":
         body = request.form["body"]
         title = request.form["title"]
+        # Adding owner variable
+        owner = request.form["username"]
         if len(title) == 0:
             return render_template("newpost.html", error="Please fill in this body")
 
@@ -93,7 +104,7 @@ def newpost():
             return render_template("newpost.html", error="Please fill in this body")
         
         
-        new_post = Blog(title, body)
+        new_post = Blog(title, body, owner)
         db.session.add(new_post)
         db.session.commit()
         return redirect("/blog") 
@@ -110,8 +121,14 @@ def post():
     solo = Blog.query.get(single)
     
     return render_template("post.html", solo=solo )
-    
 
+# Working on adding a home page with all of the Usernames from the database displayed!
+
+@app.route("/", methods=["GET"])
+def index():
+
+    users = User.query.all()
+    return render_template("home.html", title="Homepage", users = users)
 
 if __name__ == '__main__':
     app.run()

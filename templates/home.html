@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+    {% block content  %}
+        <h1>Blogz Userz!!</h1>
+        
+    <hr />
+
+        <ul>
+            <h2>check 1 2!</h2>
+            {% for name in users %}      
+            
+            <li>{{name}}       
+            </li>
+
+            {% endfor %}
+        </ul>
+
+    
+    {% endblock %}
+    
