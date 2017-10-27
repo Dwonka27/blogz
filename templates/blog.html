@@ -1,8 +1,7 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h2><a href="/blog">Main Page Blog</a></h2>
-<h2><a href="/newpost">Add a new post</a></h2>
+
 {% if blogs|length == 0 %}
 <p>No Blog Submissions Yet</p>
 {% else %}
@@ -10,10 +9,10 @@
 
 {% for blog in blogs %}
 <div>
-    <h2><a href="/post?p={{blog.id}}">{{blog.title}}</a></h2>
-
-    <h3>{{blog.body}}</h3> 
-</div>
+    <h2><a href="/post?p={{blog.id}}">{{blog.title}}</a></h2>  
+    <p>{{blog.body}}</p>
+    <p>written by<a href="/blog?id={{name.id}}"> {{blog.owner.username}}</a></p> 
+    </div>
 {% endfor %}
 
 

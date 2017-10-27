@@ -73,16 +73,20 @@ def login():
 
 @app.route("/logout")
 def logout():
-    del session["email"]
+    del session["username"]
     return redirect("/")
 
 
 @app.route("/blog", methods=["POST", "GET"])
 def blog():
-
-    if request.method == "POST":
-        title = request.form["title"]
-        body = request.form["body"]
+    
+    userid = request.args.get("id")
+    
+    if userid:
+        
+        allofit = User.query.get(userid)
+        owner = Blog.query.filter_by(owner=allofit).all()
+        return render_template("allofit.html", blogs=owner)
 
     blogs = Blog.query.all()   
 
@@ -119,17 +123,18 @@ def post():
     single = request.args.get("p")
 
     solo = Blog.query.get(single)
-    
+   
     return render_template("post.html", solo=solo )
 
 # Working on adding a home page with all of the Usernames from the database displayed!
+
 
 @app.route("/", methods=["GET"])
 def index():
 
     users = User.query.all()
 
-    return render_template("home.html", title="Homepage", users = users)
+    return render_template("home.html", users = users)
     # Definitely almost finished home page
 
 

@@ -9,8 +9,8 @@
             
             {% for name in users %}      
             <!--  CREATE FULLBLOG ROUTE  -->
-            <a href="/fullblog?userid={{name.id}}"></a> <li>{{name.username}}       
-            </li>
+            <a href="/blog?id={{name.id}}"> 
+                <li>{{name.username}}</li></a>
 
             {% endfor %}
         </ul>
