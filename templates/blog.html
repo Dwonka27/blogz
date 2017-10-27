@@ -11,7 +11,7 @@
 <div>
     <h2><a href="/post?p={{blog.id}}">{{blog.title}}</a></h2>  
     <p>{{blog.body}}</p>
-    <p>written by<a href="/blog?id={{name.id}}"> {{blog.owner.username}}</a></p> 
+    <p>written by<a href="/blog?id={{blog.owner.id}}"> {{blog.owner.username}}</a></p> 
     </div>
 {% endfor %}
 
