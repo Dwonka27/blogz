@@ -32,6 +32,15 @@ class User(db.Model):
         self.username = username
         self.password = password
 
+@app.before_request
+def require_login():
+    allowed_routes = ["login", "signup", "blog"]
+
+    if request.endpoint not in allowed_routes and "username" not in session:
+        return redirect("/login")
+
+
+
 @app.route("/signup", methods=["POST", "GET"])
 def signup():
 
@@ -42,14 +51,18 @@ def signup():
 
         existing_user = User.query.filter_by(username=username).first()
         if not existing_user:
-            new_user = User(username, password)
-            db.session.add(new_user)
-            db.session.commit()
-            session["username"] = username
-            return redirect("/newpost")     
+            if password == verify:
+                new_user = User(username, password)
+                db.session.add(new_user)
+                db.session.commit()
+                session["username"] = username
+                return redirect("/newpost")     
+            else:
+                flash("Passwords do not match.", "error")
             #successfully rerouted to new post page!
         else:
-            return "<h1>User Already Exist.</h1>"
+            flash("User Already Exist.", "error")
+
     #changed render from signup to home       
     return render_template("signup.html")
     #successfully rerouted to new post page!
